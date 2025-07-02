@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ouii 5-Second Timer Game</title>
+  <style>
+    @font-face {
+      font-family: 'Meh';
+      src: url('Meh 2.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Meh', Arial, sans-serif;
+      background-color: #fff6e5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+    img {
+      width: 180px;
+      max-width: 90vw;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #000;
+      font-size: 1.2rem;
+      margin: 0 10px 20px;
+      line-height: 1.4;
+    }
+    #timer {
+      font-size: 3rem;
+      color: #222;
+      margin: 10px 0 20px;
+    }
+    button {
+      padding: 14px 24px;
+      font-size: 1rem;
+      margin: 10px;
+      border: none;
+      background-color: #ff6600;
+      color: white;
+      cursor: pointer;
+      border-radius: 8px;
+      font-family: 'Meh', Arial, sans-serif;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #000;
+      max-width: 90vw;
+    }
+  </style>
+</head>
+<body>
+  <img src="ouii_orange.png" alt="Ouii Logo" onerror="this.style.display='none'">
+  <h2>Stop the timer exactly at <strong>05:00</strong><br>and win a free bucket of wings!</h2>
+  <div id="timer">00:00</div>
+  <button id="actionBtn">Start</button>
+  <div id="result"></div>
+  <audio id="stopSound" src="WhatsApp Audio 2025-07-02 at 5.33.08 PM.mpeg"></audio>
+
+  <script>
+    let timer;
+    let startTime;
+    let running = false;
+    const timerEl = document.getElementById('timer');
+    const actionBtn = document.getElementById('actionBtn');
+    const resultEl = document.getElementById('result');
+    const stopSound = document.getElementById('stopSound');
+
+    actionBtn.addEventListener('click', () => {
+      if (!running) {
+        resultEl.textContent = '';
+        startTime = Date.now();
+        running = true;
+        actionBtn.textContent = 'Stop';
+        timer = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const seconds = (elapsed / 1000).toFixed(2);
+          timerEl.textContent = seconds.padStart(5, '0');
+        }, 30);
+      } else {
+        clearInterval(timer);
+        stopSound.play();
+        const elapsed = (Date.now() - startTime) / 1000;
+        const rounded = elapsed.toFixed(2);
+        timerEl.textContent = rounded.padStart(5, '0');
+        running = false;
+        actionBtn.textContent = 'Start';
+        if (rounded === '5.00') {
+          resultEl.textContent = '🎉 You win a FREE bucket of wings!';
+          resultEl.style.color = '#28a745';
+        } else {
+          resultEl.textContent = `Oops! You stopped at ${rounded}. Try again!`;
+          resultEl.style.color = '#e63946';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
